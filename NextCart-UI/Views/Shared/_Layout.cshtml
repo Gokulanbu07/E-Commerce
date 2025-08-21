@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NextCart</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Ecom.WebUI.styles.css" asp-append-version="true" />
+
+    @* Recommended: Add Font Awesome for icons (e.g., search, user, cart) *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @* No inline style block needed here as all custom styles are in site.css *@
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-nextcart fixed-top">
+            <div class="container-fluid">
+                @* Brand always links to the initial dashboard, now with role-based redirection logic *@
+                @{
+                    string brandController = "Login"; // Default if not authenticated
+                    string brandAction = "Dashboard"; // Default action
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("CUSTOMER"))
+                        {
+                            brandController = "User"; // Assuming your customer dashboard is in the User controller
+                            brandAction = "Index"; // Or whatever your customer dashboard action is
+                        }
+                        else if (User.IsInRole("ADMIN"))
+                        {
+                            brandController = "Login"; // Assuming your admin dashboard is managing products
+                            brandAction = "AdminDashboard"; // Or whatever your admin dashboard action is
+                        }
+                        // Add more roles if needed
+                    }
+                }
+                <a class="navbar-brand me-4" asp-area="" asp-controller="@brandController" asp-action="@brandAction">
+                    @* UPDATED: Using the uploaded logo image. Please ensure this image is placed in wwwroot/images/nextcart_logo.png or update the path accordingly. *@
+                    <img src="~/ProductImages/nextcart.png" alt="NextCart Logo" style="height: 40px; margin-right: 8px;">
+                    @* Removed the span for text as the logo image itself contains "Next Cart" text *@
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                        @* Optional: Add Categories dropdown (keeping it commented as per your original code) *@
+                        @*
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Categories
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item text-dark" href="#">Electronics</a></li>
+                                <li><a class="dropdown-item text-dark" href="#">Books</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-dark" href="#">All Categories</a></li>
+                            </ul>
+                        </li>
+                        *@
+                    </ul>
+
+                    @{
+                        // Get current controller and action to determine page context
+                        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+                        // Determine if current page is the initial unauthenticated dashboard
+                        bool isInitialDashboardPage = (currentController == "Login" && currentAction == "Dashboard" && !User.Identity.IsAuthenticated);
+
+                        // Determine if current page is for a logged-in Customer
+                        bool isCustomerPagesContext = User.Identity.IsAuthenticated && User.IsInRole("CUSTOMER") &&
+                        (currentController == "User" ||
+                        (currentController == "Product" && (currentAction == "Index" || currentAction == "Details")));
+
+                        // Determine if current page is for a logged-in Admin
+                        bool isAdminPagesContext = User.Identity.IsAuthenticated && User.IsInRole("ADMIN") &&
+                        (currentController == "Product");
+
+                        // Conditional flags for displaying search bar and cart icon
+                        bool shouldShowSearchBar = isCustomerPagesContext && !isAdminPagesContext;
+                        bool shouldShowCartIcon = isCustomerPagesContext && !isAdminPagesContext;
+                    }
+
+                    @* Search Bar Conditional Display: Appears only on customer dashboard/product pages *@
+                    @if (shouldShowSearchBar)
+                    {
+                        <form class="d-flex my-2 my-lg-0" role="search" asp-controller="User" asp-action="Search" method="get" style="flex-grow: 1; max-width: 600px;">
+                            <div class="input-group">
+                                <input class="form-control" type="search" placeholder="Search NextCart..." aria-label="Search" name="query">
+                                <button class="btn search-button" type="submit">
+                                    <i class="fas fa-search"></i> <span>Search</span>
+                                </button>
+                            </div>
+                        </form>
+                    }
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Profile">
+                                    <i class="fas fa-user-circle"></i> Hello, @User.Identity.Name!
+                                </a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Logout">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </li>
+                            @* Cart Icon Conditional Display: Appears only on customer dashboard/product pages *@
+                            @if (shouldShowCartIcon)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else // Not Authenticated (Login, Register, Initial Dashboard)
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt"></i> Sign In
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Register">
+                                    <i class="fas fa-user-plus"></i> Register
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 80px;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer-nextcart">
+        <div class="container">
+            &copy; @DateTime.Now.Year - NextCart - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

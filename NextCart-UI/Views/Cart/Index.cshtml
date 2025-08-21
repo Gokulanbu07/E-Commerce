@@ -1,0 +1,175 @@
+﻿@model List<ECommerce.Repository.Cart>
+
+@{
+    ViewData["Title"] = "Your Shopping Cart";
+    decimal totalPrice = ViewBag.TotalPrice ?? 0m;
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Your Shopping Cart</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @* No TempData for ErrorMessage here, as AJAX will handle direct alerts for quantity/remove *@
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            Your cart is empty. Start shopping!
+        </div>
+        <div class="text-center mt-5">
+            <p class="lead">Your cart is empty!</p>
+            <p>Looks like you haven't added anything to your cart yet. Let's find some great products!</p>
+            <a asp-controller="User" asp-action="Index" class="btn btn-lg btn-warning mt-3">Continue Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <h6 class="mb-0">@item.Product.Name</h6>
+                                        <small class="text-muted">Stock: @item.Product.StockQuantity</small>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                        {
+                                            <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <img src="/images/placeholder.png" alt="No image available" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                        }
+                                    </td>
+                                    <td>₹@item.Product.Price.ToString("N0")</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <input type="number" class="form-control quantity-input"
+                                                   data-cart-id="@item.CartId"
+                                                   data-product-stock="@item.Product.StockQuantity"
+                                                   value="@item.Quantity" min="1" max="@item.Product.StockQuantity" style="width: 80px;">
+                                        </div>
+                                    </td>
+                                    <td>₹@((item.Quantity * item.Product.Price).ToString("N0"))</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm remove-from-cart-btn" data-cart-id="@item.CartId">Remove</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center mt-3">
+                    <h4 class="mb-0 me-3">Total Price: <span class="text-primary">₹@totalPrice.ToString("N0")</span></h4>
+                    <form asp-action="Checkout" asp-controller="Cart" method="post">
+                        <button type="submit" class="btn btn-success btn-lg">Proceed to Checkout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Remove From Cart using AJAX
+            $('.remove-from-cart-btn').on('click', function () {
+                var cartId = $(this).data('cart-id');
+                if (confirm('Are you sure you want to remove this item from your cart?')) {
+                    $.ajax({
+                        url: '@Url.Action("RemoveFromCart", "Cart")',
+                        type: 'POST',
+                        data: { cartId: cartId }, // Simple data, not JSON.stringify
+                        success: function (response) {
+                            if (response.success) {
+                                alert(response.message);
+                                location.reload(); // Reload page to reflect changes
+                            } else {
+                                alert('Failed to remove item: ' + response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error);
+                            alert('An error occurred while removing the item.');
+                        }
+                    });
+                }
+            });
+
+            // Update Quantity using AJAX
+            $('.quantity-input').on('change', function () {
+                var cartId = $(this).data('cart-id');
+                var newQuantity = parseInt($(this).val());
+                var maxStock = parseInt($(this).data('product-stock'));
+
+                if (isNaN(newQuantity) || newQuantity < 1) {
+                    alert('Quantity must be a positive number.');
+                    $(this).val($(this).attr('value')); // Revert to old value
+                    return;
+                }
+                if (newQuantity > maxStock) {
+                     alert('Quantity cannot exceed available stock (' + maxStock + ').');
+                     $(this).val(maxStock); // Set to max stock
+                     newQuantity = maxStock;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("UpdateQuantity", "Cart")',
+                    type: 'POST',
+                    data: { cartId: cartId, quantity: newQuantity }, // Simple data, not JSON.stringify
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload(); // Reload page to reflect changes
+                        } else {
+                            alert('Failed to update quantity: ' + response.message);
+                            location.reload(); // Reload in case of error to show correct quantity
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                        alert('An error occurred while updating quantity.');
+                        location.reload(); // Reload in case of error
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    .img-thumbnail {
+        border-radius: .25rem;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .quantity-input {
+        text-align: center;
+    }
+</style>

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ECommerce.Repository.Product>
+
+@{
+    ViewData["Title"] = "Products in " + ViewBag.CategoryName;
+}
+
+@* REMOVE ANY <style> BLOCK FROM HERE - all styles are now in site.css *@
+
+<div class="container mt-5 mb-5">
+    <div class="text-center page-header">
+        <h2 class="display-4">Products in @ViewBag.CategoryName</h2>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info alert-info-nextcart text-center" role="alert">
+            @* <--- Changed class to alert-info-nextcart *@
+            <i class="bi bi-info-circle me-2"></i> No products found for this category yet. Please check back later!
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+                    <div class="card h-100 product-card">
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="card-img-top product-image" alt="@product.Name">
+                        }
+                        else
+                        {
+                            <div class="product-image-placeholder">
+                                <span>Image Not Available</span>
+                            </div>
+                        }
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text text-muted small">
+                                @(product.Description != null && product.Description.Length > 120 ? product.Description.Substring(0, 120) + "..." : product.Description)
+                            </p>
+                            <div class="mt-auto">
+                                <p class="card-text price"><strong>@product.Price.ToString("N0")</strong></p>
+                                <p class="card-text stock">
+                                    @if (product.StockQuantity > 0)
+                                    {
+                                        <span class="stock-in">In stock.</span> @* <--- Added class stock-in *@
+                                    }
+                                    else
+                                    {
+                                        <span class="stock-out">Out of stock.</span> @* <--- Added class stock-out *@
+                                    }
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success add-to-cart-btn" @* <--- Changed class to add-to-cart-btn *@
+                                            data-product-id="@product.productId"
+                                    @Html.Raw(product.StockQuantity <= 0 ? "disabled" : "")>
+                                        @if (product.StockQuantity > 0)
+                                        {
+                                            <i class="fas fa-cart-plus"></i>
+                                            <span>Add to Cart</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span>Out of Stock</span>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.add-to-cart-btn').on('click', function () {
+                var productId = $(this).data('product-id');
+                var quantity = 1; // Default quantity for simplicity
+
+                // Check if the button is disabled (out of stock)
+                if ($(this).is(':disabled')) {
+                    alert('This product is out of stock.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ productId: productId, quantity: quantity }),
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                        } else {
+                            alert('Failed to add product to cart: ' + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error, xhr.responseText);
+                        alert('An error occurred while adding to cart. Please check the console for details.');
+                    }
+                });
+            });
+        });
+    </script>
+}

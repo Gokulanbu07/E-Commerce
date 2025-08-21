@@ -1,0 +1,62 @@
+﻿@model ECommerce.Repository.User
+@{
+    ViewData["Title"] = "Your NextCart Profile";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm p-4">
+            <h2 class="card-title text-center mb-4">Your NextCart Profile</h2>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success text-center">@TempData["Message"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+            }
+
+            <form asp-action="UpdateProfile" asp-controller="Login" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-floating mb-3">
+                    <input asp-for="UserName" class="form-control" placeholder="Enter username" />
+                    <label asp-for="UserName">Username</label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                    <label asp-for="Email">Email Address</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Role" class="form-control-plaintext bg-light" readonly style="border: none;" /> @* Readonly and styled *@
+                    @* <label asp-for="Role" class="text-muted">Your Role</label> *@
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    <button type="submit" class="btn btn-warning btn-lg">Update Profile</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    @{
+                        string backController = Model.Role == "ADMIN" ? "Login" : "User"; // Set controller based on role
+                        string backAction = Model.Role == "ADMIN" ? "AdminDashboard" : "Index"; // Set action based on role
+                    }
+                    <a asp-action="@backAction" asp-controller="@backController" class="btn btn-outline-secondary">Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

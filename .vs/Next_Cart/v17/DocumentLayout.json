@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Cognizant\\NextCart\\NextCart-main\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{794EBC0A-D646-46D5-BF37-6FC0EBC62392}|NextCart-UI\\NextCart-User-UI.csproj|d:\\cognizant\\nextcart\\nextcart-main\\nextcart-ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{794EBC0A-D646-46D5-BF37-6FC0EBC62392}|NextCart-UI\\NextCart-User-UI.csproj|solutionrelative:nextcart-ui\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{794EBC0A-D646-46D5-BF37-6FC0EBC62392}|NextCart-UI\\NextCart-User-UI.csproj|d:\\cognizant\\nextcart\\nextcart-main\\nextcart-ui\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{794EBC0A-D646-46D5-BF37-6FC0EBC62392}|NextCart-UI\\NextCart-User-UI.csproj|solutionrelative:nextcart-ui\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94B56444-A352-4FA1-B435-39B541243C1E}|ECommerce.Repository\\ECommerce.Repository.csproj|d:\\cognizant\\nextcart\\nextcart-main\\ecommerce.repository\\migrations\\20250724114544_newone.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94B56444-A352-4FA1-B435-39B541243C1E}|ECommerce.Repository\\ECommerce.Repository.csproj|solutionrelative:ecommerce.repository\\migrations\\20250724114544_newone.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\Cognizant\\NextCart\\NextCart-main\\NextCart-UI\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "NextCart-UI\\wwwroot\\css\\site.css",
+              "ToolTip": "D:\\Cognizant\\NextCart\\NextCart-main\\NextCart-UI\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "NextCart-UI\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-07-24T12:00:43.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "20250724114544_NewOne.cs",
+              "DocumentMoniker": "D:\\Cognizant\\NextCart\\NextCart-main\\ECommerce.Repository\\Migrations\\20250724114544_NewOne.cs",
+              "RelativeDocumentMoniker": "ECommerce.Repository\\Migrations\\20250724114544_NewOne.cs",
+              "ToolTip": "D:\\Cognizant\\NextCart\\NextCart-main\\ECommerce.Repository\\Migrations\\20250724114544_NewOne.cs",
+              "RelativeToolTip": "ECommerce.Repository\\Migrations\\20250724114544_NewOne.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-24T11:45:46.178Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Cognizant\\NextCart\\NextCart-main\\NextCart-UI\\appsettings.json",
+              "RelativeDocumentMoniker": "NextCart-UI\\appsettings.json",
+              "ToolTip": "D:\\Cognizant\\NextCart\\NextCart-main\\NextCart-UI\\appsettings.json",
+              "RelativeToolTip": "NextCart-UI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-24T11:43:37.805Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

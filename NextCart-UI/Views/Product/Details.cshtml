@@ -1,0 +1,254 @@
+﻿@model ECommerce.Repository.Product
+
+@{
+    ViewData["Title"] = "Product Details - " + Model.Name;
+}
+
+<style>
+    /* Amazon-inspired Styling for Product Details Page */
+    body {
+        background-color: #f0f2f5; /* Light, almost white background */
+        font-family: Arial, sans-serif;
+        color: #111;
+    }
+
+    .card.shadow-lg {
+        border-color: #ddd;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03); /* Subtle Amazon-like shadow */
+    }
+
+    .card-header {
+        background-color: #fff; /* White header for a clean look */
+        color: #111; /* Black text */
+        border-bottom: 1px solid #ddd;
+        padding: 1.5rem 1.25rem; /* Increased padding */
+        text-align: left !important; /* Align to left for "Product Details" */
+    }
+
+        .card-header h1 {
+            font-size: 2rem; /* Slightly smaller for detail page header */
+            font-weight: 700;
+            color: #111;
+        }
+
+    .product-details-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem; /* Padding around the image */
+        background-color: #fff;
+        border: 1px solid #eee; /* Light border around image section */
+        border-radius: 8px;
+        height: 100%; /* Ensure it takes full height of its column */
+    }
+
+    .product-details-image {
+        max-width: 100%;
+        max-height: 400px; /* Adjust as needed for larger detail images */
+        object-fit: contain;
+        border-radius: 4px; /* Slightly rounded corners for the image */
+    }
+
+    .product-details-image-placeholder {
+        background-color: #f7f7f7;
+        height: 300px; /* Match approximate image height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #767676;
+        font-size: 1rem;
+        font-weight: normal;
+        text-align: center;
+        border: 1px solid #eee;
+        border-radius: 4px;
+    }
+
+    .card-body h4 {
+        color: #007185; /* Amazon teal for section headings */
+        font-weight: 600;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.5rem;
+    }
+
+    dl.row dt {
+        font-weight: 500;
+        color: #565959; /* Standard Amazon text color for labels */
+        margin-bottom: 0.5rem;
+    }
+
+    dl.row dd {
+        font-weight: 400; /* Regular weight for descriptions */
+        color: #111;
+        margin-bottom: 0.5rem;
+    }
+
+        dl.row dd.price-details {
+            font-size: 1.75rem; /* Larger font for price */
+            font-weight: 700;
+            color: #B12704; /* Amazon's typical price red */
+        }
+
+        dl.row dd.stock-details {
+            font-weight: 600;
+            color: #007185; /* In stock teal */
+        }
+
+        dl.row dd.out-of-stock-details {
+            font-weight: 600;
+            color: #c45500; /* Out of stock orange */
+        }
+
+    .d-flex.justify-content-end.gap-2.mt-4.pt-3.border-top {
+        border-color: #eee !important;
+    }
+
+    /* Keep the Amazon-style buttons consistent */
+    .btn-amazon-primary {
+        background: linear-gradient(to bottom, #FFD814, #FFC400);
+        border: 1px solid #FCD200;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #111;
+        text-transform: none;
+        letter-spacing: normal;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset;
+        transition: all 0.1s ease-in-out;
+    }
+
+        .btn-amazon-primary:hover {
+            background: linear-gradient(to bottom, #F7CA00, #F3BB00);
+            border-color: #B18C00;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset, 0 1px 1px rgba(0,0,0,.2);
+        }
+
+    .btn-amazon-secondary {
+        background-color: #f7f7f7;
+        border: 1px solid #d5d9d9;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #111;
+        transition: all 0.1s ease-in-out;
+    }
+
+        .btn-amazon-secondary:hover {
+            background-color: #e6e6e6;
+            border-color: #c4c4c4;
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 767px) { /* Small screens (mobile) */
+        .product-details-image-container {
+            margin-bottom: 1.5rem; /* Add space below image on small screens */
+            height: auto;
+        }
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-white text-dark py-3">
+            <h1 class="card-title mb-0 fw-bold">Product Details</h1>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-5 mb-4 mb-md-0 d-flex align-items-center justify-content-center">
+                    <div class="product-details-image-container">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" class="product-details-image" alt="@Model.Name">
+                        }
+                        else
+                        {
+                            <div class="product-details-image-placeholder">
+                                <span>Image Not Available</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <h2 class="h4 text-secondary mb-4 border-bottom pb-2"><span class="fw-semibold text-dark">@Model.Name</span></h2>
+                    <dl class="row mb-4">
+                        <dt class="col-sm-3 col-md-3 text-muted">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-9 col-md-9 fw-bold text-dark">
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+
+                        <dt class="col-sm-3 col-md-3 text-muted">
+                            @Html.DisplayNameFor(model => model.Description)
+                        </dt>
+                        <dd class="col-sm-9 col-md-9">
+                            @Html.DisplayFor(model => model.Description)
+                        </dd>
+
+                        <dt class="col-sm-3 col-md-3 text-muted">
+                            @Html.DisplayNameFor(model => model.Price)
+                        </dt>
+                        <dd class="col-sm-9 col-md-9 price-details">
+                            $<span class="me-1">@Model.Price.ToString("N2")</span>
+                        </dd>
+
+                        <dt class="col-sm-3 col-md-3 text-muted">
+                            @Html.DisplayNameFor(model => model.StockQuantity)
+                        </dt>
+                        <dd class="col-sm-9 col-md-9">
+                            @if (Model.StockQuantity > 0)
+                            {
+                                <span class="stock-details">In stock. (@Model.StockQuantity units)</span>
+                            }
+                            else
+                            {
+                                <span class="out-of-stock-details">Out of stock.</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                <a asp-action="Edit" asp-route-id="@Model.productId" class="btn btn-amazon-secondary btn-lg">
+                    <i class="bi bi-pencil-square me-2"></i> Edit Product
+                </a>
+                <a asp-action="Index" class="btn btn-amazon-secondary btn-lg">
+                    <i class="bi bi-arrow-left-circle me-2"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.btn-amazon-primary').on('click', function () {
+                var productId = $(this).data('product-id');
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    data: { productId: productId, quantity: 1 },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                        } else {
+                            alert('Failed to add product to cart: ' + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                        alert('An error occurred while adding to cart.');
+                    }
+                });
+            });
+        });
+    </script>
+}
