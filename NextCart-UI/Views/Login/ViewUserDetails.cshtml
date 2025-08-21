@@ -1,0 +1,77 @@
+﻿@using ECommerce.Repository.Entity
+@using ECommerce.Repository.Models
+@model User
+
+@{
+    ViewData["Title"] = "Customer Details";
+}
+
+<div class="container mt-4">
+    <hr />
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Customer Details: @Model.UserName</h3>
+        <a asp-action="RegisteredUsers" asp-controller="Login" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Customer List
+        </a>
+    </div>
+
+    <div class="card shadow-sm p-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">User Information</h5>
+            <dl class="row">
+                <dt class="col-sm-4">User ID:</dt>
+                <dd class="col-sm-8">@Model.Id</dd>
+
+                <dt class="col-sm-4">Username:</dt>
+                <dd class="col-sm-8">@Model.UserName</dd>
+
+                <dt class="col-sm-4">Email:</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+
+                @* IMPORTANT: These properties (FirstName, LastName, Address, City, State, PhoneNumber)
+                             must exist on your 'ECommerce.Repository.Models.User' class and be populated
+                             in your database for them to display correctly.
+                             If they don't exist, you'll need to add them to your 'User' entity. *@
+
+                @* @if (!string.IsNullOrEmpty(Model.FirstName)) *@
+                @* { *@
+                @*     <dt class="col-sm-4">First Name:</dt> *@
+                @*     <dd class="col-sm-8">@Model.FirstName</dd> *@
+                @* } *@
+                @* @if (!string.IsNullOrEmpty(Model.LastName)) *@
+                @* { *@
+                @*     <dt class="col-sm-4">Last Name:</dt> *@
+                @*     <dd class="col-sm-8">@Model.LastName</dd> *@
+                @* } *@
+               
+                @* @if (!string.IsNullOrEmpty(Model.Address)) *@
+                @* { *@
+                @*     <dt class="col-sm-4">Address:</dt> *@
+                @*     <dd class="col-sm-8">@Model.Address</dd> *@
+                @* } *@
+                @* @if (!string.IsNullOrEmpty(Model.City)) *@
+                @* { *@
+                @*     <dt class="col-sm-4">City:</dt> *@
+                @*     <dd class="col-sm-8">@Model.City</dd> *@
+                @* } *@
+                @* @if (!string.IsNullOrEmpty(Model.State)) *@
+                @* { *@
+                @*     <dt class="col-sm-4">State:</dt> *@
+                @*     <dd class="col-sm-8">@Model.State</dd> *@
+                @* } *@
+
+                @* Optional: Other standard IdentityUser properties you might want to view, but are read-only: *@
+                <dt class="col-sm-4">Email Confirmed:</dt>
+                <dd class="col-sm-8">@(Model.EmailConfirmed ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-4">Two Factor Enabled:</dt>
+                <dd class="col-sm-8">@(Model.TwoFactorEnabled ? "Yes" : "No")</dd>
+
+            </dl>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+ }

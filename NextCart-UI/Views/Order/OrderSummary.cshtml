@@ -1,0 +1,108 @@
+﻿@using ECommerce.Repository.Entity
+@model Order
+
+@{
+    ViewData["Title"] = "Order Summary";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mt-7 mb-4 text-info">Order Summary</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm mb-4">
+        @*<div class="card-header  text-black" style="background-color:#FFC107;">
+            <h5 class="mb-0">Order #@Model.OrderId.Substring(0, 8)...</h5>
+        </div>*@
+        <div class="card-header text-white" style="background-color:#663399;">
+            <h5 class="mb-0">Your Order id &#8594; #@Model.OrderId</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                   
+                    <p><strong>Order Date:</strong> @Model.OrderDate.ToShortDateString() @Model.OrderDate.ToShortTimeString()</p>
+                    <p><strong>Status:</strong> <span class="badge bg-secondary">@Model.OrderStatus</span></p>
+                    <p><strong>Total Amount:</strong> <span class="text-primary">₹@Model.TotalAmount.ToString("N0")</span></p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Shipping Address:</strong>
+                    <p>@Model.ShippingAddress</p>
+                    <p>@Model.ShippingCity, @Model.ShippingState @Model.ShippingPostalCode</p>
+                    <strong>Phone:</strong><span> @Model.ShippingPhoneNumber</span><br /><br />
+                    <strong>Email:</strong><span> @Model.CustomerEmail</span>
+                </div>
+            </div>
+
+            <hr />
+
+            <strong>Items you Ordered</strong>
+
+
+
+            <div class="table-responsive">
+                <table style="border-collapse: collapse; width: 100%; border: 1px solid #663399;">
+                    <thead>
+                        <tr style="background-color: #663399; color: #FFFFFF; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <th style="padding: 12px 15px; text-align: left; border: 1px solid #263238;">Product Name</th>
+                            <th style="padding: 12px 15px; text-align: left; border: 1px solid #263238;">Quantity</th>
+                            <th style="padding: 12px 15px; text-align: left; border: 1px solid #263238;">Unit Price</th>
+                            <th style="padding: 12px 15px; text-align: left; border: 1px solid #263238;">Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background-color: #F5F5F5; color: #333333;">
+                        @if (Model.OrderItems != null && Model.OrderItems.Any())
+                        {
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td style="padding: 12px 15px; text-align: left; border: 1px solid #CCCCCC;">@item.ProductName</td>
+                                    <td style="padding: 12px 15px; text-align: left; border: 1px solid #CCCCCC;">@item.Quantity</td>
+                                    <td style="padding: 12px 15px; text-align: left; border: 1px solid #CCCCCC;">₹@item.UnitPrice.ToString("N0")</td>
+                                    <td style="padding: 12px 15px; text-align: left; border: 1px solid #CCCCCC;">₹@item.TotalPrice.ToString("N0")</td>
+                                </tr>
+                            }
+                        }
+                   
+
+
+
+
+
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No items found for this order.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                @if (Model.OrderStatus == "Pending")
+                {
+                    @* IMPORTANT: Changed from <form> to <a> to easily pass multiple route values.
+                       If you prefer <form method="post">, you'd add a hidden input for amount.
+                       For now, this aligns with passing query parameters for the GET action. *@
+                    <div class="btn btn-md bg-info">
+                    <a asp-controller="Payment" asp-action="ProcessPayment"
+                       asp-route-orderId="@Model.OrderId"
+                           asp-route-amount="@Model.TotalAmount" style="color: #000000; text-decoration: none;">
+                           Proceed to Payment</a>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Payment status: @Model.OrderStatus</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

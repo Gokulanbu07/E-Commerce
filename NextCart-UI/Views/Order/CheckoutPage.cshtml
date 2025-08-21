@@ -1,0 +1,102 @@
+﻿  @model ECommerce.Repository.Models.CheckoutViewModel
+    @using ECommerce.Repository
+@using ECommerce.Repository.Entity
+
+@{
+    ViewData["Title"] = "Checkout";
+    // Retrieve cart items and total price passed via ViewBag
+    var cartItems = ViewBag.CartItems as List<Cart>;
+    decimal totalPrice = ViewBag.TotalPrice ?? 0m;
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Checkout</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header  text-black" style="background-color: #FFC107;">
+                    <h5 class="mb-0">Shipping Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProcessCheckout" asp-controller="Order" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="City" class="form-label"></label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="State" class="form-label"></label>
+                            <input asp-for="State" class="form-control" />
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PostalCode" class="form-label"></label>
+                            <input asp-for="PostalCode" class="form-control" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn text-black  btn-lg w-100" style="background-color:#8A2BE2;">Place Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+           
+            <div class="card shadow-sm">
+                
+                <div class="card-header text-black" style="background-color:#FFC107;">
+                    
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    
+                    @if (cartItems != null && cartItems.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in cartItems)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@item.ProductName</strong>
+                                        <br />
+                                        <small>@item.Quantity x ₹@item.UnitPrice.ToString("N0")</small>
+                                    </div>
+                                    <span>₹@((item.Quantity * item.UnitPrice).ToString("N0"))</span>
+                                </li>
+                            }
+                        </ul>
+                        <div class="mt-3 text-end">
+                            <h4>Total: <span class="text-primary">₹@totalPrice.ToString("N0")</span></h4>
+                        </div> 
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">No items in cart.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

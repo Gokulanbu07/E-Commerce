@@ -1,0 +1,116 @@
+﻿@using ECommerce.Repository.Entity
+@model Order
+
+@{
+    ViewData["Title"] = "Order Details";
+    string? latestPaymentId = null;
+    if (Model.Payments != null && Model.Payments.Any())
+    {
+        latestPaymentId = Model.Payments.OrderByDescending(p => p.PaymentDate).FirstOrDefault()?.PaymentId;
+    }
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Order Details - #@Model.OrderId.Substring(0, 8)...</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Order Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Order ID:</strong> @Model.OrderId</p>
+                    <p><strong>Order Date:</strong> @Model.OrderDate.ToLongDateString() @Model.OrderDate.ToLongTimeString()</p>
+                    <p><strong>Total Amount:</strong> <span class="h5 text-primary">₹@Model.TotalAmount.ToString("N0")</span></p>
+                    <p><strong>Status:</strong> <span class="badge bg-@((Model.OrderStatus == "Processing" || Model.OrderStatus == "Completed") ? "success" : (Model.OrderStatus == "Pending" ? "warning" : "danger"))">@Model.OrderStatus</span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Customer Email:</strong> @Model.CustomerEmail</p>
+                    <p><strong>User ID:</strong> @Model.UserId</p>
+                    @if (Model.Payments != null && Model.Payments.Any())
+                    {
+                        var latestPayment = Model.Payments.OrderByDescending(p => p.PaymentDate).FirstOrDefault();
+                        if (latestPayment != null)
+                        {
+                            <p><strong>Payment Status:</strong> @latestPayment.PaymentStatus</p>
+                            <p><strong>Payment Method:</strong> @latestPayment.PaymentMethod</p>
+                            <p><strong>Transaction ID:</strong> @latestPayment.TransactionId</p>
+                        }
+                    }
+                    else
+                    {
+                        <p><strong>Payment Info:</strong> Not available or pending.</p>
+                    }
+                </div>
+            </div>
+
+            <hr />
+
+            <h6>Shipping Details:</h6>
+            <address>
+                @Model.ShippingAddress<br />
+                @Model.ShippingCity, @Model.ShippingState @Model.ShippingPostalCode<br />
+                Phone: @Model.ShippingPhoneNumber
+            </address>
+
+            <hr />
+
+            <h6>Order Items:</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.OrderItems != null && Model.OrderItems.Any())
+                        {
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.Quantity</td>
+                                    <td>₹@item.UnitPrice.ToString("N0")</td>
+                                    <td>₹@item.TotalPrice.ToString("N0")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No items found for this order.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 text-end">
+                @if (!string.IsNullOrEmpty(latestPaymentId))
+                {
+                    <a asp-action="PaymentStatus" asp-controller="Payment" asp-route-paymentId="@latestPaymentId" class="btn btn-info me-2">Back to Payment Status</a>
+                }
+                else
+                {
+                    <button class="btn btn-info me-2" disabled>No Payment Info</button>
+                }
+                <a asp-action="OrderHistory" asp-controller="Order" class="btn btn-secondary">Back to Order History</a>
+            </div>
+
+
+        </div>
+    </div>
+</div>

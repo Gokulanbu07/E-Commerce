@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    /* Specific styles for the About Us page, using your brand's CSS variables */
+    .about-page-section {
+        padding: 4rem 0;
+        background-color: var(--nextcart-bg-light);
+        color: var(--nextcart-dark-text);
+    }
+
+    /* Main "About Us" heading above the content block - NOW PURPLE */
+    .about-page-heading {
+        color: #5A209B; /* Explicitly purple for this page's heading */
+        font-weight: 700;
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .about-content-card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+        padding: 3rem;
+    }
+
+    .about-image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+        .about-image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
+        }
+
+    .about-text-content h2 {
+        color: var(--nextcart-primary-blue); /* This will be the site's default primary blue */
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 2.8rem;
+    }
+
+    .about-text-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1.2rem;
+    }
+
+    .highlight-text {
+        color: var(--nextcart-accent-gold); /* Orange/Gold for highlight */
+        font-weight: 600;
+    }
+
+    /* Styles for the "Stats" section */
+    .stats-container-bottom {
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .stats-grid-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 1.5rem;
+    }
+
+    .stat-item-bottom {
+        background-color: #f8f9fa;
+        padding: 1.5rem 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid #e9ecef;
+        flex-basis: 28%;
+        min-width: 180px;
+    }
+
+        /* Stat numbers (5000+, 10000+, 10+) - NOW PURPLE */
+        .stat-item-bottom h3 {
+            color: #5A209B; /* Explicitly purple for the numbers */
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item-bottom p {
+            font-size: 1rem;
+            color: var(--nextcart-dark-text);
+            margin-bottom: 0;
+        }
+
+    /* Custom button style for NextCart gold - yellow with glow */
+    .btn-nextcart-gold {
+        background-color: var(--nextcart-accent-gold); /* Uses the accent gold from _Layout */
+        border-color: var(--nextcart-accent-gold); /* Uses the accent gold from _Layout */
+        color: var(--nextcart-dark-text);
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .btn-nextcart-gold:hover,
+        .btn-nextcart-gold:focus {
+            background-color: #E0A800; /* Slightly darker gold on hover/focus */
+            border-color: #E0A800;
+            color: var(--nextcart-dark-text);
+            box-shadow: 0 0 15px 5px rgba(255, 193, 7, 0.6); /* Light yellow glow effect */
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 992px) {
+        .about-image-container {
+            margin-bottom: 2rem;
+        }
+    }
+</style>
+
+<div class="about-page-section">
+    <div class="container">
+        @* Main "About Us" heading above the content block *@
+
+
+        <div class="about-content-card">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="about-image-container">
+                        @* Make sure you have an image at this path: wwwroot/ProductImages/about-us-banner.jpg *@
+                        <img src="~/ProductImages/ab.png" alt="Our NextCart Team" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="about-text-content">
+                        <h2 class="about-page-heading">About Us</h2>
+                        <p>
+                            At NextCart, we are dedicated to making online shopping <strong class="highlight-text">effortless, enjoyable, and rewarding</strong>.
+                            Our platform connects you with a vast array of quality products across diverse categories, ensuring a seamless experience.
+                        </p>
+                        <p>
+                            We constantly expand our offerings, from cutting-edge <span class="highlight-text">Electronics</span> and the latest <span class="highlight-text">Fashions</span>
+                            to essential <span class="highlight-text">Groceries</span> and educational <span class="highlight-text">Books</span>. Our focus is on value, customer satisfaction,
+                            and continuous improvement to bring you the best.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            @* Stats section below image/text row *@
+            <div class="stats-container-bottom">
+                <div class="stats-grid-bottom">
+                    <div class="stat-item-bottom">
+                        <h3>5000+</h3>
+                        <p>Happy Customers</p>
+                    </div>
+                    <div class="stat-item-bottom">
+                        <h3>10000+</h3>
+                        <p>Diverse Products</p>
+                    </div>
+                    <div class="stat-item-bottom">
+                        <h3>10+</h3>
+                        <p>Major Categories</p>
+                    </div>
+                </div>
+            </div>
+
+            @* Explore Categories Button - on its own line after the stats *@
+            <div class="text-center mt-4">
+                <a class="btn btn-nextcart-gold btn-lg" asp-area="" asp-controller="User" asp-action="Index">
+                    <i class="fas fa-th-large me-2"></i> Explore Our Categories
+                </a>
+            </div>
+
+        </div> @* End of .about-content-card *@
+    </div> @* End of .container *@
+</div> @* End of .about-page-section *@

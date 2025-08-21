@@ -1,0 +1,61 @@
+﻿@model ECommerce.Repository.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Create Your NextCart Account";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-7 col-lg-5">
+        <div class="card shadow-sm p-4 auth-card">
+            @* 'auth-card' class ensures custom styling from site.css *@
+            <h2 class="card-title text-center mb-4">Create Your NextCart Account</h2>
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Username" class="form-control" placeholder="Enter username" />
+                    <label asp-for="Username"></label>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                @* NEW: Phone Number Field *@
+                @* <div class="form-floating mb-3"> *@
+                @*     <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" /> *@
+                @*     <label asp-for="PhoneNumber"></label> *@
+                @*     <span asp-validation-for="PhoneNumber" class="text-danger"></span> *@
+                @* </div> *@
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                    <label asp-for="Email"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Create password" />
+                    <label asp-for="Password"></label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-4">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+                    <label asp-for="ConfirmPassword"></label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    @* This button will automatically pick up styles from site.css for .auth-card .btn.btn-warning.btn-lg *@
+                    <button type="submit" class="btn btn-warning btn-lg">Register Your Account</button>
+                </div>
+
+                <p class="text-center text-muted mt-3">
+                    Already have an account?
+                    @* This link will automatically pick up styles from site.css for .auth-carddd .text-muted a *@
+                    <a asp-action="Login">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

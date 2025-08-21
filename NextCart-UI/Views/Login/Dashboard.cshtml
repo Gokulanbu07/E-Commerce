@@ -1,0 +1,24 @@
+﻿@* views/Login/dashboard.cshtml *@
+@{
+    ViewData["Title"] = "Welcome to NextCart";
+    // This assumes your _Layout.cshtml is correctly configured
+    // If not, you might need to explicitly set it: Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="text-center">
+        <h1 class="display-4" style="color: var(--nextcart-dark-grey);">Welcome to NextCart!</h1>
+        <p class="lead" style="color: var(--nextcart-mid-grey-text);">Your one-stop shop for everything you need.</p>
+        <p>
+            <a asp-controller="Login" asp-action="Login" class="btn btn-lg btn-warning mt-3">Start Shopping</a>
+            @* The 'btn-warning' and 'btn-lg' classes will apply the custom color from site.css *@
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @* Include any scripts specific to this page if needed, for now just the validation scripts if you want *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

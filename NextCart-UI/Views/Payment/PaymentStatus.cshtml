@@ -1,0 +1,44 @@
+﻿@model ECommerce.Repository.Models.PaymentResultViewModel
+@using ECommerce.Repository
+
+@{
+    ViewData["Title"] = "Payment Status";
+    var statusClass = Model.IsSuccess ? "alert-success" : "alert-danger";
+    var iconClass = Model.IsSuccess ? "bi-check-circle-fill" : "bi-x-circle-fill"; // Requires Bootstrap Icons
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Payment Status</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert @statusClass text-center" role="alert">
+                        <i class="bi @iconClass fs-3"></i>
+                        <h4 class="alert-heading mt-2">@Model.Message</h4>
+                        <strong>Your order will be delivered in 7 days.</strong>
+                    </div>
+
+                    <p><strong>Payment ID:</strong> @Model.PaymentId</p>
+                    <p><strong>Order ID:</strong> @Model.OrderId</p>
+                    <p><strong>Amount:</strong> @Model.Amount.ToString("C")</p>
+                    <p><strong>Payment Method:</strong> @Model.PaymentMethod.ToString()</p>
+                    <p><strong>Payment Status:</strong> @Model.PaymentStatus.ToString()</p>
+                    <p><strong>Payment Date:</strong> @Model.PaymentDate.ToLocalTime().ToString("g")</p>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a asp-controller="Order" asp-action="OrderDetails" asp-route-orderId="@Model.OrderId" class="btn btn-info">View Order Details</a>
+                        <a asp-controller="Order" asp-action="OrderHistory" class="btn btn-secondary">Go to Order History</a>
+                        <a asp-controller="User" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+}

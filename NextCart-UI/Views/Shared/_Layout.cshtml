@@ -1,0 +1,248 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NextCart</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Ecom.WebUI.styles.css" asp-append-version="true" />
+
+    @* Recommended: Add Font Awesome for icons (e.g., search, user, cart) *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @* No inline style block needed here as all custom styles are in site.css *@
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-nextcart fixed-top">
+            <div class="container-fluid">
+                @* Brand always links to the initial dashboard, now with role-based redirectionn logicd *@
+                @{
+                    string brandController = "Login"; // Default if not authenticated
+                    string brandAction = "Dashboard"; // Default action
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("CUSTOMER"))
+                        {
+                            brandController = "User"; // Assuming your customer dashboard is in the User controller
+                            brandAction = "Index"; // Or whatever your customer dashboard action is
+                        }
+                        else if (User.IsInRole("ADMIN"))
+                        {
+                            brandController = "Login"; // Assuming your admin dashboard is managing products
+                            brandAction = "AdminDashboard"; // Or whatever your admin dashboard action is
+                        }
+                        // Add more roles if needed
+                    }
+                }
+                <a class="navbar-brand me-4" asp-area="" asp-controller="@brandController" asp-action="@brandAction">
+                    <img src="~/ProductImages/log.png" alt="NextCart Logo" style="height: 120px; margin-right: 8px;">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                        @* Optional: Add Categories dropdown (keeping it commented as per your original code) *@
+                        @*
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item text-dark" href="#">Electronics</a></li>
+                            <li><a class="dropdown-item text-dark" href="#">Books</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-dark" href="#">All Categories</a></li>
+                        </ul>
+                    </li>
+                    *@
+
+                        @{
+                            // Get current controller and action to determine page context
+                            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+                            // Determine if current page is the initial unauthenticated dashboard
+                            bool isInitialDashboardPage = (currentController == "Login" && currentAction == "Dashboard" && !User.Identity.IsAuthenticated);
+
+                            // Inside your _Layout.cshtml, around line 96
+                            // Determine if current page is for a logged-in Customer
+                            // Determine if current page is for a logged-in Customer
+                            bool isCustomerPagesContext = User.Identity.IsAuthenticated && User.IsInRole("CUSTOMER") &&
+                            (currentController == "User" ||
+                            (currentController == "Product" && (currentAction == "Index" || currentAction == "Details")) ||
+                            (currentController == "Cart" && currentAction == "Index")); // Added Cart page context
+
+                            // Determine if current page is for a logged-in Admin
+                            bool isAdminPagesContext = User.Identity.IsAuthenticated && User.IsInRole("ADMIN") &&
+                            (currentController == "Product" || currentController == "Login" && currentAction == "AdminDashboard"); // Added Admin dashboard context
+
+                            // Conditional flags for displaying search bar and cart icon
+                            bool shouldShowSearchBar = isCustomerPagesContext; // Search bar for customers only
+                            bool shouldShowCartIcon = isCustomerPagesContext; // Cart icon for customers only
+                        }
+
+                        @* NEW: Home and About Us Links - ONLY for Customer context *@
+                        @if (isCustomerPagesContext)
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="AboutUs" asp-action="Index">About Us</a>
+                            </li>
+                        }
+                    </ul>
+
+                    @* Search Bar Conditional Display: Appears only on customer dashboard/product pages *@
+                  <form class="d-flex my-2 my-lg-0" role="search" asp-controller="User" asp-action="Search" method="get">
+                        @if (shouldShowSearchBar)
+                        {
+                            <div class="input-group">
+                                <input class="form-control" type="search" placeholder="Search NextCart..." aria-label="Search" name="query" id="searchInput" autocomplete="off">
+                                <button class="btn search-button" type="submit">
+                                    <i class="fas fa-search"></i> <span>Search</span>
+                                </button>
+                            </div>
+                           
+                            <div id="searchResults" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;">
+                            </div>
+                        }
+                    </form>
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Profile">
+                                    <i class="fas fa-user-circle"></i> Hello, @User.Identity.Name!
+                                </a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Logout">
+                                    <i></i> Logout
+                                </a>
+                            </li>
+                            @* Cart Icon Conditional Display: Appears only on customer dashboard/product pages *@
+                            @if (shouldShowCartIcon)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark position-relative" asp-area="" asp-controller="Cart" asp-action="Index">
+                                        <i class="fas fa-shopping-cart"></i> 
+                                        <span id="cartBadge" class="badge bg-warning rounded-pill position-absolute top-0 start-100 translate-middle">
+                                            @* This will be updated by JavaScript. Initial value set by server. *@
+                                            @* If ViewBag.CartItemCount is available, use it here, otherwise it will be 0/empty *@
+                                            @(ViewBag.CartItemCount > 0 ? ViewBag.CartItemCount.ToString() : "")
+                                        </span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else // Not Authenticated (Login, Register, Initial Dashboard)
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Login">
+                                    <i></i> Sign In
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Register">
+                                    <i></i> Register
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <input type="hidden" id="initialCartCount" value="@(ViewBag.CartItemCount ?? 0)" />
+
+    <div class="container" style="margin-top: 80px;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer-nextcart">
+        <div class="container">
+            &copy; @DateTime.Now.Year - NextCart  <a asp-area="" asp-controller="Home"></a>
+        </div>
+    </footer>
+
+
+
+   
+       
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            var searchInput = $('#searchInput');
+            var searchResults = $('#searchResults');
+            var debounceTimer;
+
+            searchInput.on('keyup', function () {
+                clearTimeout(debounceTimer);
+
+                var query = $(this).val();
+
+                if (query.length > 1) { // Start searching after 2 characters
+                    debounceTimer = setTimeout(function() {
+                        $.ajax({
+                            url: '/User/GetCategorySuggestions', // CORRECTED URL
+                            method: 'GET',
+                            data: { term: query },
+                            success: function (data) {
+                                searchResults.empty(); // Clear previous suggestions
+                                if (data.length > 0) {
+                                    $.each(data, function (index, category) {
+                                        var suggestionLink = $('<a class="list-group-item list-group-item-action"></a>')
+                                            .text(category.name)
+                                            .attr('href', '/User/ProductsByCategory/' + category.id);
+
+                                        searchResults.append(suggestionLink);
+                                    });
+                                    searchResults.show(); // Show the suggestion box
+                                } else {
+                                    searchResults.hide(); // Hide if no suggestions
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.error("Error fetching suggestions:", textStatus, errorThrown, jqXHR.responseText);
+                                searchResults.hide();
+                            }
+                        });
+                    }, 300); // Debounce time: 300 milliseconds
+                } else {
+                    searchResults.hide(); // Hide if query is too short
+                }
+            });
+
+            // Hide suggestions when clicking outside the search area
+            $(document).on('click', function (event) {
+                // Ensure click is outside the form container itself
+                if (!$(event.target).closest('form[role="search"]').length) {
+                    $('#searchResults').hide();
+                }
+            });
+        });
+    </script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    
+
+
+   
+</body>
+</html>

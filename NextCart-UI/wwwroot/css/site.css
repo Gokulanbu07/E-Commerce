@@ -1,0 +1,560 @@
+/* NextCart Color Palette Variables (UPDATED for Yellow & Purple) */
+:root {
+    --nextcart-page-bg: #F8F3F7; /* Very light subtle background, almost white */
+    --nextcart-navbar-bg: #5D2F8A; /* Deep Purple for Navbar/Header/Footer */
+    --nextcart-accent-yellow: #FFC107; /* NEW: Vibrant Yellow for accents, buttons, links */
+    --nextcart-white-text: #FFFFFF; /* White text for contrast on dark backgrounds */
+    --nextcart-hover-yellow: #E0A800; /* NEW: Darker Yellow for hover state */
+    --nextcart-dark-text: #333333; /* A general dark text color for contrast on light backgrounds */
+    --nextcart-light-text: #7A7A7A; /* For muted text */
+    --nextcart-border-light: #D1C4E9; /* Light Purple for subtle borders */
+    --nextcart-out-of-stock-orange: #DC3545; /* Keeping as red for "out of stock" (error state) */
+    --nextcart-error-red: #DC3545; /* Standard red for error messages */
+}
+
+/* Global Body Styling */
+body {
+    background-color: var(--nextcart-page-bg); /* Light subtle background */
+    color: var(--nextcart-dark-text); /* Dark grey for default text */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar Styling (NextCart themed - UPDATED) */
+.navbar-nextcart {
+    background-color: var(--nextcart-navbar-bg); /* Deep Purple for navbar */
+    height: 80px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+    .navbar-nextcart .navbar-brand,
+    .navbar-nextcart .nav-link {
+        color: var(--nextcart-white-text) !important; /* White text for links, maintains contrast */
+        font-weight: 500;
+        transition: color 0.2s ease-in-out;
+    }
+
+        .navbar-nextcart .navbar-brand span {
+            font-weight: bold;
+            font-size: 1.6rem; /* Slightly larger brand text */
+        }
+
+        .navbar-nextcart .nav-link:hover {
+            color: var(--nextcart-accent-yellow) !important; /* Vibrant Yellow for hover */
+        }
+
+    .navbar-nextcart .form-control {
+        border-radius: 4px;
+        border-color: var(--nextcart-border-light); /* Subtle light purple border for search input */
+        color: var(--nextcart-dark-text);
+    }
+
+        .navbar-nextcart .form-control:focus {
+            border-color: var(--nextcart-accent-yellow); /* Vibrant Yellow on focus */
+            box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25); /* NEW: Shadow based on vibrant yellow (RGB of #FFC107) */
+        }
+
+/* Search Button Styling (UPDATED) */
+.search-button {
+    background-color: var(--nextcart-accent-yellow); /* Vibrant Yellow for search button */
+    border-color: var(--nextcart-accent-yellow);
+    color: var(--nextcart-white-text); /* White text for contrast on yellow */
+    padding: 0.375rem 0.75rem; /* Match bootstrap button padding */
+    border-radius: 4px; /* Match input border radius */
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+    .search-button:hover {
+        background-color: var(--nextcart-hover-yellow); /* Slightly darker Yellow on hover */
+        border-color: var(--nextcart-hover-yellow);
+        color: var(--nextcart-white-text);
+    }
+
+/* Footer Styling (NextCart themed - UPDATED) */
+.footer-nextcart {
+    background-color: var(--nextcart-navbar-bg); /* Deep Purple footer, consistent with header */
+    color: var(--nextcart-page-bg); /* Light background color for footer text, for contrast */
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 50px; /* Ensure space above footer */
+}
+
+/* Jumbotron and related buttons (for possible Home/Landing Page - UPDATED) */
+.jumbotron {
+    background-color: var(--nextcart-page-bg); /* Light subtle background for Jumbotron */
+    border-radius: 0.5rem;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    color: var(--nextcart-dark-text); /* Default text color for jumbotron */
+}
+
+    .jumbotron .display-4 {
+        color: var(--nextcart-dark-text); /* Dark grey text for heading */
+    }
+
+    .jumbotron .lead {
+        color: var(--nextcart-light-text); /* Mid-grey for lead paragraph */
+    }
+
+.btn-primary-nextcart { /* Custom class for primary action buttons - UPDATED */
+    background-color: var(--nextcart-accent-yellow); /* Vibrant Yellow */
+    border-color: var(--nextcart-accent-yellow);
+    color: var(--nextcart-white-text); /* White text for contrast */
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px; /* Rounded corners */
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn-primary-nextcart:hover {
+        background-color: var(--nextcart-hover-yellow); /* Slightly darker Yellow */
+        border-color: var(--nextcart-hover-yellow);
+        color: var(--nextcart-white-text);
+    }
+
+.btn-outline-primary-nextcart { /* UPDATED */
+    color: var(--nextcart-accent-yellow); /* Vibrant Yellow */
+    border-color: var(--nextcart-accent-yellow);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn-outline-primary-nextcart:hover {
+        background-color: var(--nextcart-accent-yellow); /* Vibrant Yellow */
+        color: var(--nextcart-white-text); /* White text */
+    }
+
+/* Product Page Specific Styles - UPDATED */
+.page-header {
+    margin-top: 3rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    text-align: center; /* Center the header */
+}
+
+    .page-header h2 {
+        color: var(--nextcart-dark-text);
+        font-weight: 700;
+        font-size: 2rem;
+        padding-bottom: 0.5rem;
+        position: relative;
+        display: inline-block;
+    }
+
+        .page-header h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--nextcart-accent-yellow); /* Vibrant Yellow */
+            border-radius: 2px;
+        }
+
+/* No Products Alert */
+.alert-info-nextcart { /* Renamed for consistency */
+    background-color: #F8F3F7; /* Very light subtle background */
+    color: var(--nextcart-dark-text);
+    border: 1px solid var(--nextcart-border-light); /* Light Purple border */
+    padding: 1.25rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .alert-info-nextcart .bi, .alert-info-nextcart .fas { /* Added fas for Font Awesome icons */
+        color: var(--nextcart-accent-yellow); /* Vibrant Yellow */
+        font-size: 1.3rem;
+        margin-right: 0.75rem;
+    }
+
+/* Product Card Styling - UPDATED */
+.product-card {
+    border: 1px solid var(--nextcart-border-light); /* Light Purple border */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle initial shadow */
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--nextcart-white-text); /* White card background */
+}
+
+    .product-card:hover {
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+        border-color: var(--nextcart-accent-yellow); /* Vibrant Yellow on hover */
+    }
+
+.product-image {
+    height: 150px;
+    object-fit: contain;
+    background-color: var(--nextcart-white-text);
+    padding: 8px;
+    border-bottom: 1px solid #eee; /* Light grey border */
+}
+
+.product-image-placeholder {
+    background-color: #F8F3F7; /* Slightly lighter subtle background for placeholder */
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--nextcart-light-text);
+    font-size: 0.9rem;
+    font-weight: normal;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.product-card .card-body {
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-card .card-title {
+    font-size: 0.95rem;
+    font-weight: 500; /* Adjusted font-weight */
+    color: var(--nextcart-dark-text);
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
+    min-height: 36px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-card .card-text.text-muted.small {
+    font-size: 0.8rem;
+    color: var(--nextcart-light-text) !important; /* !important to override Bootstrap's text-muted */
+    margin-bottom: 0.4rem;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-card .card-text.price {
+    font-size: 1.05rem;
+    color: var(--nextcart-dark-text);
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.product-card .card-text.stock {
+    font-size: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.product-card .stock-in { /* New class for in-stock color - UPDATED */
+    color: var(--nextcart-accent-yellow) !important; /* Vibrant Yellow for in-stock */
+    font-weight: 600;
+}
+
+.product-card .stock-out { /* New class for out-of-stock color */
+    color: var(--nextcart-error-red) !important; /* Using error red for out-of-stock */
+    font-weight: 600;
+}
+
+.add-to-cart-btn { /* UPDATED */
+    background: linear-gradient(to bottom, var(--nextcart-accent-yellow), var(--nextcart-hover-yellow)); /* Yellow gradient */
+    border: 1px solid var(--nextcart-hover-yellow);
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--nextcart-white-text); /* White text for contrast */
+    transition: all 0.1s ease-in-out;
+}
+
+    .add-to-cart-btn:hover {
+        background: linear-gradient(to bottom, var(--nextcart-hover-yellow), #C09A00); /* NEW: Slightly darker yellow gradient */
+        border-color: #C09A00;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset, 0 1px 1px rgba(0,0,0,.2);
+    }
+
+    .add-to-cart-btn:disabled {
+        background: var(--nextcart-border-light); /* Light purple for disabled */
+        border-color: var(--nextcart-border-light);
+        color: var(--nextcart-light-text);
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+
+/* Error Page Specific Styles */
+.error-container {
+    padding: 50px;
+    text-align: center;
+    background-color: var(--nextcart-white-text); /* White background for the error message box */
+    border: 1px solid var(--nextcart-border-light); /* Subtle light purple border */
+    border-radius: 8px;
+    margin-top: 50px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05); /* Soft shadow */
+    max-width: 800px; /* Constrain width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .error-container h1 {
+        color: var(--nextcart-error-red); /* Red for errors */
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .error-container h2 {
+        color: var(--nextcart-dark-text);
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .error-container p {
+        color: var(--nextcart-light-text);
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    .error-container strong {
+        color: var(--nextcart-dark-text);
+    }
+
+/* Warning for Development environment */
+.alert-warning-dev {
+    background-color: #FFF3CD; /* NEW: Light yellow background */
+    color: var(--nextcart-hover-yellow); /* NEW: Darker yellow text */
+    border-color: var(--nextcart-hover-yellow); /* NEW: Darker yellow border */
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* Login and Register Page Specific Styles - UPDATED */
+/* These will override default Bootstrap styles for buttons, links, and cards within these forms */
+
+/* Target the card specifically */
+.auth-card {
+    background-color: var(--nextcart-white-text);
+    border: 1px solid var(--nextcart-border-light); /* Light Purple border */
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+}
+
+    /* Correct form-floating behavior */
+    .auth-card .form-floating > .form-control::placeholder {
+        color: transparent; /* Hide placeholder when label is showing */
+    }
+
+    .auth-card .form-floating > .form-control:focus,
+    .auth-card .form-floating > .form-control:not(:placeholder-shown) {
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+    }
+
+    .auth-card .form-floating > label {
+        transform-origin: 0 0;
+        transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+        color: var(--nextcart-light-text); /* Ensure default label color is subtle */
+    }
+
+    .auth-card .form-floating > .form-control:focus ~ label,
+    .auth-card .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        opacity: 0.65;
+        transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+        color: var(--nextcart-dark-text); /* Darker label when floating */
+    }
+
+    /* !!! NEW: Styles for form-control-plaintext within auth-card !!! */
+    .auth-card .form-control-plaintext {
+        color: var(--nextcart-dark-text) !important; /* Ensure text is dark on light background */
+        background-color: transparent !important; /* Ensures no default background */
+        border: none !important; /* Removes border for plaintext look */
+        /* Adjust padding to align with other form-floating inputs */
+        padding-top: calc(1.5rem + 1px) !important;
+        padding-bottom: calc(1.5rem + 1px) !important;
+        padding-left: 0.75rem !important;
+    }
+
+
+    /* Override default Bootstrap button styles for btn-warning within auth forms - UPDATED */
+    /* Increased specificity for btn-warning and btn-lg */
+    .auth-card .btn.btn-warning.btn-lg {
+        background-color: var(--nextcart-accent-yellow) !important; /* Vibrant Yellow */
+        border-color: var(--nextcart-accent-yellow) !important;
+        color: var(--nextcart-white-text) !important; /* White text for contrast */
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .auth-card .btn.btn-warning.btn-lg:hover {
+            background-color: var(--nextcart-hover-yellow) !important; /* Darker Yellow on hover */
+
+            border-color: var(--nextcart-hover-yellow) !important;
+            color: var(--nextcart-white-text) !important;
+        }
+
+    /* Override default Bootstrap text-muted for links within auth forms - UPDATED */
+    .auth-card .text-muted {
+        color: var(--nextcart-light-text) !important; /* Mid-grey for muted text */
+    }
+
+        .auth-card .text-muted a {
+            color: var(--nextcart-accent-yellow) !important; /* Vibrant Yellow for links */
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+
+            .auth-card .text-muted a:hover {
+                color: var(--nextcart-hover-yellow) !important;
+                text-decoration: underline;
+            }
+
+    /* Override form-floating inputs for consistent look - UPDATEDd */
+    .auth-card .form-control {
+        border-color: var(--nextcart-border-light); /* Light Purple border */
+        color: var(--nextcart-dark-text);
+    }
+
+        .auth-card .form-control:focus {
+            border-color: var(--nextcart-accent-yellow); /* Vibrant Yellow focus border */
+            box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25); /* NEW: Shadow based on vibrant yellow (RGB of #FFC107) */
+        }
+
+    /* !!! NEW: Styling for btn-outline-secondary within auth-card for "Back to Dashboard" button !!! */
+    .auth-card .btn-outline-secondary {
+        color: var(--nextcart-accent-yellow) !important; /* Golden text for outline */
+        border-color: var(--nextcart-accent-yellow) !important; /* Golden border */
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .auth-card .btn-outline-secondary:hover {
+            background-color: var(--nextcart-accent-yellow) !important; /* Golden background on hover */
+            color: var(--nextcart-dark-text) !important; /* Dark text on golden hover */
+            border-color: var(--nextcart-accent-yellow) !important;
+        }
+
+
+/* Responsive adjustments (apply globally to site.css) */
+@media (max-width: 991px) {
+    .col-md-4, .col-lg-3, .col-sm-6 { /* General responsive columns for grids */
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 767px) {
+    .col-xs-12, .col-sm-6 { /* More specific for smaller screens */
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .navbar-brand span {
+        font-size: 1.3rem; /* Smaller brand text on mobile */
+    }
+
+    .search-button span {
+        display: none; /* Hide 'Search' text on mobile, keep icon */
+    }
+
+    .search-button .fas.fa-search {
+        margin-right: 0 !important; /* Remove margin if text is hidden */
+    }
+}
+
+/* --- Cart Badge CSS --- */
+.cart-badge {
+    position: absolute;
+    top: -5px; /* Adjust this value to move it up/down */
+    right: -10px; /* Adjust this value to move it left/right */
+    font-size: 0.7em; /* Smaller font size for the count */
+    padding: 0.2em 0.5em; /* Adjust padding to make it smaller */
+    background-color: var(--nextcart-accent-yellow); /* Uses your custom yellow */
+    border: 1px solid var(--nextcart-accent-yellow); /* Optional: add a small border */
+    z-index: 100; /* Ensure it appears on top of other elements */
+    display: none; /* Initially hide the badge if cart is empty, will be shown by JS if count > 0 */
+}
+
+    /* Style for when the badge has items and JavaScript adds the 'active' class */
+    .cart-badge.active {
+        display: inline-block;
+    }
+
+.bg-warning {
+    background-color: var(--nextcart-accent-yellow) !important; /* Forces Bootstrap's bg-warning to your yellow */
+}
+
+/* --- Search Bar Suggestions CSS --- */
+
+/* Ensure the parent form or wrapper has relative positioning */
+.d-flex.my-2.my-lg-0 {
+    position: relative; /* THIS IS CRUCIAL FOR POSITIONING #searchResults */
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+/* Styling for the search results container */
+#searchResults {
+    position: absolute;
+    top: 100%; /* Positions it directly below the parent form */
+    left: 0; /* Aligns with the left edge of the parent form */
+    width: 100%; /* Makes it span the full width of the search input/button group */
+    background-color: var(--nextcart-white-text); /* White background for suggestions */
+    border: 1px solid var(--nextcart-border-light); /* Light Purple border */
+    border-top: none; /* No top border to blend with the input */
+    border-radius: 0 0 0.25rem 0.25rem; /* Rounded bottom corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    max-height: 200px; /* Limit height and add scrollbar if many suggestions */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    z-index: 1050; /* Ensure it appears above other elements like navbars */
+    padding: 0;
+    margin: 0;
+}
+
+    /* Styling for individual suggestion items */
+    #searchResults .list-group-item {
+        padding: 0.75rem 1.25rem;
+        cursor: pointer;
+        background-color: var(--nextcart-white-text);
+        color: var(--nextcart-dark-text);
+        border-bottom: 1px solid #eee; /* Light grey separator between items */
+        text-decoration: none;
+        display: block;
+    }
+
+        #searchResults .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        #searchResults .list-group-item:hover,
+        #searchResults .list-group-item:focus {
+            background-color: var(--nextcart-page-bg);
+            color: var(--nextcart-accent-yellow);
+            outline: none;
+        }
+
+/* Refine input and button border-radius to blend better with suggestions */
+.input-group #searchInput {
+    border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.input-group .search-button {
+    border-radius: 0 0.25rem 0.25rem 0;
+}

@@ -1,0 +1,105 @@
+﻿@using ECommerce.Repository.Entity
+@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Products in " + ViewBag.CategoryName;
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Products in @ViewBag.CategoryName</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            No products found for this category yet.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm product-card">
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="card-img-top product-image" alt="@product.Name">
+                        }
+                        else
+                        {
+                            <img src="/images/placeholder.png" class="card-img-top product-image" alt="No image available">
+                        }
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text text-muted small">@product.Description</p>
+                            <div class="mt-auto">
+                                <p class="card-text price"><strong>₹@product.Price.ToString("N0")</strong></p>
+                                <p class="card-text stock">Stock: @product.StockQuantity</p>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success add-to-cart-btn"
+                                            data-product-id="@product.productId" 
+                                    @Html.Raw(product.StockQuantity <= 0 ? "disabled" : "")>
+                                        @* <--- SUPER IMPORTANT CHANGE HERE *@
+                                        @if (product.StockQuantity > 0)
+                                        {
+                                            <i class="fas fa-cart-plus"></i>
+
+                                            <span>Add to Cart</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-exclamation-circle"></i>
+
+                                            <span>Out of Stock</span>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    }
+
+
+<style>
+    /* Your existing CSS for product cards */
+    .product-card {
+        transition: transform 0.2s;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .product-image {
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #eee;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        min-height: 50px;
+    }
+
+    .card-text.price {
+        font-size: 1.1rem;
+        color: #007bff;
+    }
+
+    .card-text.stock {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>

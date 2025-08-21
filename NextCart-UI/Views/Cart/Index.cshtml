@@ -1,0 +1,378 @@
+﻿@using ECommerce.Repository.Entity
+@model List<Cart>
+
+@{
+    ViewData["Title"] = "Your Shopping Cart";
+    decimal totalPrice = ViewBag.TotalPrice ?? 0m;
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Your Shopping Cart</h2>
+
+    @* @if (TempData["ErrorMessage"] != null) *@
+    @* { *@
+    @*     <div class="alert alert-danger alert-dismissible fade show" role="alert"> *@
+    @*         @TempData["ErrorMessage"] *@
+    @*         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> *@
+    @*     </div> *@
+    @* } *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            Your cart is empty. Start shopping!
+        </div>
+        <div class="text-center mt-5">
+            <p class="lead">Your cart is empty!</p>
+            <p>Looks like you haven't added anything to your cart yet. Let's find some great products!</p>
+            <a asp-controller="User" asp-action="Index" class="btn btn-lg btn-warning mt-3">Continue Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody">
+                            
+                            @foreach (var item in Model)
+                            {
+                                <tr class="cart-item-row">
+                                    <td>
+                                        <h6 class="mb-0">@item.Product.Name</h6>
+                                        <small class="text-muted">Stock: @item.Product.StockQuantity</small>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                        {
+                                            <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <img src="/images/placeholder.png" alt="No image available" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                        }
+                                        <span class="item-price" data-price="@item.Product.Price"></span>
+                                    </td>
+                                    <td>₹@item.Product.Price.ToString("N0")</td>
+                                    <td>
+                                        <input type="number" class="form-control quantity-input"
+                                               data-cart-id="@item.CartId"
+                                               data-product-stock="@item.Product.StockQuantity"
+                                               value="@item.Quantity" min="1" max="@item.Product.StockQuantity" style="width: 80px;">
+                                    </td>
+                                    <td>₹<span class="item-subtotal">@((item.Quantity * item.Product.Price).ToString("N0"))</span>
+
+          </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm remove-from-cart-btn" data-cart-id="@item.CartId">Remove</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center mt-3">
+                    <h4 class="mb-0 me-3">Total Price: <span class="text-primary" id="totalPriceDisplay">₹@totalPrice.ToString("N0")</span></h4>
+
+                    <a asp-controller="User" asp-action="Index" class="btn btn-info me-2">Continue Shopping</a>
+                    <form asp-controller="Cart" asp-action="ClearCart" method="post" class="d-inline me-2">
+                        <button type="submit" class="btn btn-warning"
+                                onclick="return confirm('Are you sure you want to clear your entire cart?');">
+                            Clear Cart
+                        </button>
+                        @Html.AntiForgeryToken()
+                    </form>
+
+                    @* Changed asp-controller to "Cart" as per your CartController's CheckoutPage action *@
+                    <a asp-controller="Order" asp-action="CheckoutPage" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            // HELPER FUNCTION: To update the total price displayed on the cart page
+
+            function updateTotalDisplay() {
+
+                var totalPrice = 0;
+
+                // Loop through each cart item row to sum up their subtotals
+
+                $('.cart-item-row').each(function () {
+
+                    var quantity = parseInt($(this).find('.quantity-input').val());
+
+                    // Get the raw numeric price from the data-price attribute
+
+                    var price = parseFloat($(this).find('.item-price').data('price'));
+
+                    if (!isNaN(quantity) && !isNaN(price)) {
+
+                        totalPrice += quantity * price;
+
+                    }
+
+                });
+
+                // Update the text of the element with id="totalPriceDisplay"
+
+                // Ensure to format it consistently with your currency (e.g., to 2 decimal places)
+
+                $('#totalPriceDisplay').text(totalPrice.toFixed(2));
+
+            }
+
+            // Remove From Cart using AJAX
+
+            $('.remove-from-cart-btn').on('click', function () {
+
+                var cartId = $(this).data('cart-id');
+
+                var $rowToRemove = $(this).closest('.cart-item-row'); // Get a reference to the table row to remove
+
+                if (confirm('Are you sure you want to remove this item from your cart?')) {
+
+                    $.ajax({
+
+                        url: '@Url.Action("RemoveFromCart", "Cart")',
+
+                        type: 'POST',
+
+                        data: { cartId: cartId },
+
+                        success: function (response) {
+
+                            if (response.success) {
+
+                                //alert(response.message);
+
+                                // Call the global updateCartBadge function from site.js
+
+                                if (window.updateCartBadge) {
+
+                                    window.updateCartBadge(response.newCartCount);
+
+                                }
+
+                                // Remove the item's row from the table on the current page
+
+                                $rowToRemove.remove();
+
+                                // Recalculate and update the overall total price displayed
+
+                                updateTotalDisplay();
+
+                                // If the cart becomes empty after removal, update the display to show "empty cart"
+
+                                if (response.newCartCount === 0) {
+
+                                    // Update the tbody content
+
+                                    $('#cartTableBody').html('<tr><td colspan="6" class="text-center">Your cart is empty.</td></tr>');
+
+                                    // Hide the checkout section and total price display
+
+                                    $('#checkoutSection').hide();
+
+                                }
+
+                                // Removed: location.reload();
+
+                            } else {
+
+                                alert('Failed to remove item: ' + response.message);
+
+                                // Removed: location.reload(); // Also remove this from the else block
+
+                            }
+
+                        },
+
+                        error: function (xhr, status, error) {
+
+                            console.error("AJAX Error:", status, error);
+
+                            alert('An error occurred while removing the item.');
+
+                            // Removed: location.reload(); // Also remove this from the error block
+
+                        }
+
+                    });
+
+                }
+
+            });
+
+            // Update Quantity using AJAX
+
+            $('.quantity-input').on('change', function () {
+
+                var cartId = $(this).data('cart-id');
+
+                var $inputElement = $(this); // Reference to the quantity input that changed
+
+                var newQuantity = parseInt($inputElement.val());
+
+                var maxStock = parseInt($inputElement.data('product-stock'));
+
+                var $row = $inputElement.closest('.cart-item-row'); // Get the parent row for this item
+
+                var $subtotalElement = $row.find('.item-subtotal'); // Element to update the item's subtotal
+
+                var itemPrice = parseFloat($row.find('.item-price').data('price')); // Get unit price from data-attribute
+
+
+                if (isNaN(newQuantity) || newQuantity < 1) {
+
+                    alert('Quantity must be a positive number.');
+
+                    $inputElement.val($inputElement.attr('value')); // Revert to last valid quantity
+
+                    return;
+
+                }
+
+                if (newQuantity > maxStock) {
+
+                   alert('Quantity cannot exceed available stock (' + maxStock + ').');
+
+                   $inputElement.val(maxStock); // Set input to max stock display
+
+                   newQuantity = maxStock; // Use max stock for the AJAX call
+
+                }
+
+                // If the quantity didn't actually change from its previous valid value, no AJAX call needed
+
+                if (newQuantity === parseInt($inputElement.attr('value'))) {
+
+                    return;
+
+                }
+
+                $.ajax({
+
+                    url: '@Url.Action("UpdateQuantity", "Cart")',
+
+                    type: 'POST',
+
+                    data: { cartId: cartId, quantity: newQuantity },
+
+                    success: function (response) {
+
+                        if (response.success) {
+
+                            // alert(response.message); // Optional
+
+                            // Call the global updateCartBadge function
+
+                            if (window.updateCartBadge) {
+
+                                window.updateCartBadge(response.newCartCount);
+
+                            }
+
+                            // Update the subtotal for this specific item in the row
+
+                            if (!isNaN(itemPrice)) {
+
+                                $subtotalElement.text((newQuantity * itemPrice).toFixed(2));
+
+                            }
+
+                            // Recalculate and update the overall cart total price displayed
+
+                            updateTotalDisplay();
+
+                            // Update the input's 'value' attribute to reflect the new committed quantity
+
+                            // This is crucial for future 'change' events to compare against the correct old value
+
+                            $inputElement.attr('value', newQuantity);
+
+                            // Removed: location.reload();
+
+                        } else {
+
+                            alert('Failed to update quantity: ' + response.message);
+
+                            // On error, revert the quantity input back to its last valid value
+
+                            $inputElement.val($inputElement.attr('value'));
+
+                            // Removed: location.reload(); // REMOVE THIS LINE
+
+                        }
+
+                    },
+
+                    error: function (xhr, status, error) {
+
+                        console.error("AJAX Error:", status, error);
+
+                        alert('An error occurred while updating quantity.');
+
+                        // On error, revert the quantity input back to its last valid value
+
+                        $inputElement.val($inputElement.attr('value'));
+
+                        // Removed: location.reload(); // REMOVE THIS LINE
+
+                    }
+
+                });
+
+            });
+
+            // Initial calculation of the total price when the cart page loads
+
+            updateTotalDisplay();
+
+        });
+    </script>
+
+}
+
+
+<style>
+    .img-thumbnail {
+        border-radius: .25rem;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .quantity-input {
+        text-align: center;
+    }
+</style>

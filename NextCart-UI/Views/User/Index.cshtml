@@ -1,0 +1,317 @@
+﻿@using ECommerce.Repository.Entity
+@model IEnumerable<Category>
+
+@{
+    ViewData["Title"] = "Explore Categories";
+}
+
+
+<style>
+    /* Global Styling Enhancements */
+    html, body {
+        width: 100%;
+        min-width: 0; /* Ensure no minimum width is causing issues */
+        overflow-x: hidden; /* Prevent horizontal scrollbar if elements slightly exceed viewport */
+        margin: 0 !important; /* Force remove default body margin */
+        padding: 0 !important; /* Force remove default body padding */
+        background-color: #f0f2f5; /* A very light, soft grey background */
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Modern, clean font */
+    }
+
+    /* Override Bootstrap's default container padding for the main content area */
+    .container {
+        padding-left: 15px; /* Re-add standard padding for internal content */
+        padding-right: 15px; /* Re-add standard padding for internal content */
+        margin-left: auto; /* Center the container */
+        margin-right: auto; /* Center the container */
+        max-width: 1140px; /* Or whatever your desired max-width for the main content is */
+    }
+
+    /* --- Category Header Styling --- */
+    .category-header-section {
+        margin-top: 4rem;
+        margin-bottom: 3.5rem;
+        position: relative;
+    }
+
+        .category-header-section h2 {
+            color: #2c3e50; /* Dark blue-grey for a sophisticated feel */
+            font-weight: 700;
+            font-size: 2.5rem; /* Larger heading */
+            padding-bottom: 0.75rem; /* Space for the underline */
+            position: relative;
+            display: inline-block; /* Allows centering of the underline */
+        }
+
+            .category-header-section h2::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                bottom: 0;
+                transform: translateX(-50%);
+                width: 100px; /* Wider underline */
+                height: 4px;
+                background-color: #007bff; /* Primary blue underline */
+                border-radius: 2px;
+            }
+
+        .category-header-section p {
+            color: #7f8c8d; /* Muted grey for description */
+            font-size: 1.1rem;
+            margin-top: 0.75rem;
+        }
+
+    /* --- Card Styling --- */
+    .category-card {
+        border: none;
+        border-radius: 1rem; /* Even more rounded corners for a softer look */
+        overflow: hidden;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08); /* Softer, more diffuse shadow */
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth, elegant transition */
+        cursor: pointer;
+        height: 100%; /* Ensure cards in a row have equal height */
+        display: flex;
+        flex-direction: column;
+    }
+
+        .category-card:hover {
+            transform: translateY(-8px); /* More pronounced lift on hover */
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+        }
+
+    .category-card-img {
+        width: 100%;
+        height: 200px; /* Fixed height for consistency */
+        object-fit: cover; /* Ensures images cover the area without distortion */
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+
+    .category-card-placeholder {
+        background-color: #e9ecef;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #adb5bd;
+        font-size: 1.3rem;
+        font-weight: 500;
+        text-align: center;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+
+    .category-card-body {
+        padding: 1.75rem; /* More generous padding */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center content vertically */
+        align-items: center; /* Center content horizontally */
+        flex-grow: 1; /* Allow body to take available space */
+    }
+
+        .category-card-body h5 {
+            color: #34495e; /* Slightly darker grey for title */
+            font-weight: 600;
+            font-size: 1.3rem; /* Slightly larger category name */
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+
+    /* --- Button Styling --- */
+    .btn-view-products {
+        background-color: #FFC107; /* Changed: Background color to match "Next Cart" logo text */
+        border: none;
+        border-radius: 50px; /* Fully rounded, pill shape */
+        padding: 0.75rem 2rem; /* More padding for a bolder button */
+        font-size: 1rem;
+        font-weight: 600;
+        color: #000000; /* Changed: Text color to black */
+        text-transform: uppercase; /* Uppercase text for impact */
+        letter-spacing: 0.05em; /* Spacing between letters */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Adjust shadow for new color */
+        transition: all 0.3s ease; /* Smooth transition for all properties */
+    }
+
+        .btn-view-products:hover {
+            background-color: #E0A800; /* Slightly darker orange/gold on hover */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow on hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .category-header-section h2 {
+            font-size: 2rem;
+        }
+
+        .col-md-4 {
+            flex: 0 0 50%; /* Two columns on medium screens */
+            max-width: 50%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .col-md-4 {
+            flex: 0 0 100%; /* Single column on small screens */
+            max-width: 100%;
+        }
+    }
+
+    /* Carousel Specific Styles - MODIFIED FOR TRUE FULL WIDTH AND NO CAPTIONS */
+    /* Ensure the carousel spans the entire viewport width */
+    #carouselExampleIndicators {
+        width: 100vw; /* Take 100% of the viewport width */
+        margin-left: calc(50% - 50vw) !important; /* This trick centers and extends the element to full viewport width */
+        margin-right: calc(50% - 50vw) !important; /* This effectively makes it full screen width */
+        max-width: none !important; /* Override any max-width constraints */
+        border-radius: 0 !important; /* Ensure no rounded corners are applied */
+        margin-bottom: 0 !important; /* Ensure no bottom margin */
+        padding: 0 !important; /* Ensure no padding on the carousel container itself */
+        /* NEW CHANGE: Remove top margin/padding to eliminate gap with navbar */
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .carousel-inner {
+        width: 100% !important; /* Ensure inner takes full width */
+        border-radius: 0 !important; /* Remove rounded corners */
+        margin: 0 !important; /* Ensure no margin on inner */
+        padding: 0 !important; /* Ensure no padding on inner */
+    }
+
+    .carousel-item {
+        width: 100% !important; /* Ensure item takes full width */
+        margin: 0 !important; /* Ensure no margin on item */
+        padding: 0 !important; /* Ensure no padding on item */
+    }
+
+        .carousel-item img {
+            width: 100% !important; /* Force image to 100% width */
+            height: 35vw; /* Current height: 35% of viewport width */
+            object-fit: cover; /* CHANGED: Image will cover the area, potentially cropping */
+            object-position: center; /* Ensures the center of the image is prioritized */
+            border-radius: 0 !important; /* Remove rounded corners */
+            background-color: #000; /* Optional: Add a black background for the 'contain' effect */
+        }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for icons */
+        border-radius: 50%; /* Make icons circular */
+        padding: 15px; /* Adjust padding for icon size */
+        /* To make them appear further out to the edge */
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10; /* Ensure they are above the image */
+    }
+
+    .carousel-control-prev {
+        left: 0; /* Align to the very left edge */
+    }
+
+    .carousel-control-next {
+        right: 0; /* Align to the very right edge */
+    }
+
+    /* Hide carousel captions (if you had any, they will be hidden) */
+    .carousel-caption {
+        display: none !important;
+    }
+</style>
+
+<!-- Hero Section / Banner Carousel -->
+<!-- This section is designed to be full-width, placed after the navbar and before the main content container -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/ProductImages/Banner2.png" class="d-block w-100" alt="Banner 1">
+        </div>
+        <div class="carousel-item">
+            <img src="~/ProductImages/Banner4.png" class="d-block w-100" alt="Banner 2">
+        </div>
+        <div class="carousel-item">
+            <img src="~/ProductImages/Banner5.png" class="d-block w-100" alt="Banner 3">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+<div class="container mt-5 mb-5">
+    @* This container now starts AFTER the carousel *@
+
+    @if (TempData["SearchMessage"] != null)
+    {
+        <div class="alert alert-warning mt-3" role="alert">
+            @TempData["SearchMessage"]
+        </div>
+    }
+
+    <div class="text-center category-header-section">
+        <h2 class="display-4">Explore Our Diverse Categories</h2>
+        <p class="lead">Discover products across a wide range of collections, curated just for you.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        @foreach (var category in Model)
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+                @* d-flex for equal card height *EN*@
+                <div class="category-card">
+                    <div class="category-card-body">
+                        <h5>@category.Name</h5>
+                        @{
+                            string actionName = "ProductsByCategory"; // Default fallback action
+                            // Determine specific action based on category name
+                            switch (category.Name?.ToLower())
+                            {
+                                case "Fashions":
+                                    actionName = "FashionsView";
+                                    break;
+                                case "Beauty Products":
+                                    actionName = "BeautyProductsView";
+                                    break;
+                                case "FootWear":
+                                    actionName = "FootWearView";
+                                    break;
+                                case "Electronics":
+                                    actionName = "ElectronicsView";
+                                    break;
+                                case "Home Appliances":
+                                    actionName = "HomeAppliancesView";
+                                    break;
+                                case "Furniture":
+                                    actionName = "FurnitureView";
+                                    break;
+                                case "Groceries":
+                                    actionName = "GroceriesView";
+                                    break;
+                                case "Books and Stationary":
+                                    actionName = "BooksAndStationaryView";
+                                    break;
+                                // Add more cases for other specific categories if needed
+                                default:
+                                    break;
+                            }
+                        }
+                        <a href="@(actionName == "ProductsByCategory" ? Url.Action("ProductsByCategory", "User", new { id = category.categoryId }) : Url.Action(actionName, "User"))" class="btn btn-view-products">View Products</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

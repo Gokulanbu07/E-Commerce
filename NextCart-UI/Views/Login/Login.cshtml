@@ -1,0 +1,49 @@
+﻿@model ECommerce.Repository.Models.LoginViewModel
+@{
+    ViewBag.Title = "Sign In to NextCart";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm p-4 auth-card">
+            @* 'auth-card' class ensures custom styling *@
+            <h2 class="card-title text-center mb-4">Sign In to NextCart</h2>
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                    <label asp-for="Email"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-4">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                    <label asp-for="Password"></label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 text-end">
+                    @* This link will now use the styles defined for .auth-card .text-muted a *@
+                    <a asp-action="ForgotPassword" asp-controller="Login" class="text-muted">Forgot your password?</a>
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    @* This button will now use the styles defined for .auth-card .btn.btn-warning.btn-lg *@
+                    <button type="submit" class="btn btn-warning btn-lg">Sign In</button>
+                </div>
+
+                <p class="text-center text-muted mt-3">
+                    Don't have an account?
+                    @* This link will now use the styles defined for .auth-card .text-muted aaa *@
+                    <a asp-action="Register">Register Now</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,65 @@
+﻿@using ECommerce.Repository.Models
+@model List<UserPurchaseViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">User Purchase Report</h2>
+    <div class="accordion" id="userAccordion">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var user = Model[i];
+            string collapseId = $"collapseUser{i}";
+
+            <div class="accordion-item mb-3 border border-light shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed justify-content-between" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                        <div class="me-auto">
+                            <strong>@user.UserName</strong> (@user.UserId) – @user.PhoneNumber
+                            <br />
+                            <small class="text-muted">Address: @user.ShippingAddress</small>
+                        </div>
+                        <span class="badge bg-primary">Show Orders</span>
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#userAccordion">
+                    <div class="accordion-body">
+                        @if (user.Purchases?.Any() == true)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Date</th>
+                                            <th>Payment</th>
+                                            <th>Transaction</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var p in user.Purchases)
+                                        {
+                                            <tr>
+                                                <td>@p.ProductName</td>
+                                                <td>@p.PurchaseDate.ToShortDateString()</td>
+                                                <td>@p.PaymentMethod</td>
+                                                <td>@(string.IsNullOrEmpty(p.TransactionId) ? "N/A" : p.TransactionId)</td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No purchases found.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
